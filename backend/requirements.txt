@@ -1,0 +1,11 @@
+# Core FastAPI dependencies
+fastapi>=0.109.0
+uvicorn[standard]>=0.27.0
+python-dotenv>=1.0.0
+
+# OpenAI and Agents SDK (for WebSearchTool)
+openai>=1.104.1
+openai-agents>=0.2.11
+
+# Optional: for testing
+requests>=2.31.0
