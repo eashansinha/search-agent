@@ -1,185 +1,134 @@
-# Search Agent
+# OpenAI WebSearchTool Agent
 
-A modern search agent application built with OpenAI's Agents SDK, FastAPI, and Next.js.
-
-## Project Structure
-
-```
-search-agent/
-├── backend/           # Python FastAPI backend
-│   ├── app/
-│   │   ├── agents/   # Agent implementations
-│   │   ├── api/      # API routes
-│   │   ├── config.py # Configuration
-│   │   └── main.py   # FastAPI application
-│   ├── requirements.txt
-│   └── .env.example
-├── frontend/          # Next.js TypeScript frontend (coming soon)
-└── README.md
-```
+A powerful search agent built with OpenAI's WebSearchTool for real-time web search capabilities.
 
 ## Features
 
-- 🤖 **AI-Powered Search**: Leverages OpenAI's Agents SDK for intelligent search capabilities
-- 🚀 **FastAPI Backend**: High-performance async API with automatic documentation
-- 🔍 **Search Tools**: Web search and content summarization capabilities
-- 💬 **Chat Interface**: Conversational interaction with the search agent
-- 🎨 **Modern Frontend**: Next.js with TypeScript (planned)
+- 🔍 **Real-time Web Search**: Access current information from the internet
+- 📚 **Source Citation**: Automatic citation of sources and URLs
+- 🎯 **Configurable Context**: Adjust search depth (low/medium/high)
+- 🔄 **Multi-Query Synthesis**: Combine insights from multiple searches
+- 📊 **Research Mode**: In-depth research with automatic query generation
+- 💬 **Conversational Interface**: Chat with optional web search
 
-## Getting Started
+## Quick Start
 
-### Prerequisites
+### 1. Installation
 
-- Python 3.8+
-- OpenAI API key
-- Node.js 18+ (for frontend, when implemented)
+```bash
+cd backend
+pip install -r requirements.txt
+```
 
-### Backend Setup
+### 2. Configuration
 
-1. **Navigate to the backend directory:**
-   ```bash
-   cd backend
-   ```
+Create a `.env` file with your OpenAI API key:
 
-2. **Create a virtual environment:**
-   ```bash
-   python -m venv venv
-   source venv/bin/activate  # On Windows: venv\Scripts\activate
-   ```
+```bash
+cp .env.example .env
+# Edit .env and add your OPENAI_API_KEY
+```
 
-3. **Install dependencies:**
-   ```bash
-   pip install -r requirements.txt
-   ```
+### 3. Run the Application
 
-4. **Set up environment variables:**
-   ```bash
-   cp .env.example .env
-   # Edit .env and add your OpenAI API key
-   ```
+**Option A: FastAPI Server**
+```bash
+python websearch_app.py
+# Server runs on http://localhost:8000
+```
 
-5. **Run the server:**
-   ```bash
-   # Development mode
-   python -m app.main
-   
-   # Or using uvicorn directly
-   uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
-   ```
-
-6. **Access the API:**
-   - API Documentation: http://localhost:8000/docs
-   - Alternative Docs: http://localhost:8000/redoc
-   - API Endpoint: http://localhost:8000/api
+**Option B: Direct Testing**
+```bash
+python test_websearch_agent.py
+```
 
 ## API Endpoints
 
 ### Search
 ```bash
-POST /api/search
+POST /search
 {
-  "query": "What is machine learning?",
-  "num_results": 5
+  "query": "What are the latest AI developments?",
+  "context_size": "medium"  # low, medium, or high
+}
+```
+
+### Multi-Query Search
+```bash
+POST /search/multi-query
+{
+  "queries": ["What is AI?", "What is ML?"]
+}
+```
+
+### Research
+```bash
+POST /research
+{
+  "topic": "Quantum computing",
+  "depth": "detailed"  # basic, detailed, or comprehensive
 }
 ```
 
 ### Chat
 ```bash
-POST /api/chat
+POST /chat
 {
-  "message": "Tell me about quantum computing",
-  "conversation_history": []
+  "message": "What's the weather today?",
+  "enable_search": true
 }
 ```
 
-### Health Check
+## Project Structure
+
+```
+search-agent/
+├── backend/
+│   ├── app/
+│   │   ├── agents/
+│   │   │   ├── __init__.py
+│   │   │   └── openai_agent.py      # OpenAI WebSearchTool implementation
+│   │   ├── api/
+│   │   │   ├── __init__.py
+│   │   │   └── routes.py            # API endpoints
+│   │   ├── __init__.py
+│   │   ├── config.py                # Configuration
+│   │   └── main.py                  # FastAPI app
+│   ├── .env                         # Environment variables
+│   ├── .env.example                 # Example environment file
+│   ├── requirements.txt             # Python dependencies
+│   ├── websearch_app.py            # Standalone FastAPI app
+│   ├── test_websearch_agent.py     # Test script
+│   └── test_api.sh                 # API testing script
+├── WEBSEARCH_INTEGRATION.md        # Detailed integration docs
+├── TESTING_GUIDE.md                # Testing documentation
+└── README.md                        # This file
+```
+
+## Requirements
+
+- Python 3.8+
+- OpenAI API key with access to GPT-4o
+- `openai-agents>=0.2.11`
+- `openai>=1.104.1`
+
+## Testing
+
+Run the comprehensive test:
 ```bash
-GET /api/health
+python test_websearch_agent.py
 ```
 
-### Agent Info
+Or test the API endpoints:
 ```bash
-GET /api/agent/info
+./test_api.sh
 ```
 
-## Development Roadmap
+## Documentation
 
-### Phase 1: Backend (Current)
-- [x] FastAPI application setup
-- [x] OpenAI Agents SDK integration
-- [x] Basic search agent implementation
-- [x] API endpoints for search and chat
-- [ ] Real search API integration (Google, Bing, or Tavily)
-- [ ] Session management for conversations
-- [ ] Enhanced error handling and logging
-
-### Phase 2: Frontend (Next)
-- [ ] Next.js project setup with TypeScript
-- [ ] Modern UI with Tailwind CSS
-- [ ] Search interface component
-- [ ] Chat interface component
-- [ ] Real-time streaming responses
-- [ ] Conversation history management
-
-### Phase 3: Advanced Features
-- [ ] Multi-agent coordination
-- [ ] Custom tool integration
-- [ ] Advanced search filters
-- [ ] Result caching
-- [ ] User authentication
-- [ ] Rate limiting
-- [ ] Analytics and monitoring
-
-## Technology Stack
-
-### Backend
-- **Framework**: FastAPI
-- **AI/ML**: OpenAI Agents SDK, OpenAI API
-- **Language**: Python 3.8+
-- **Server**: Uvicorn (ASGI)
-
-### Frontend (Planned)
-- **Framework**: Next.js 14+
-- **Language**: TypeScript
-- **Styling**: Tailwind CSS
-- **State Management**: React Context/Zustand
-- **API Client**: Axios/Fetch
-
-## Configuration
-
-Key configuration options in `.env`:
-
-```env
-OPENAI_API_KEY=your-api-key
-HOST=0.0.0.0
-PORT=8000
-DEBUG=True
-ALLOWED_ORIGINS=http://localhost:3000,http://localhost:3001
-```
-
-## Production Deployment
-
-### Backend
-```bash
-# Using Gunicorn
-gunicorn app.main:app -w 4 -k uvicorn.workers.UvicornWorker
-
-# Using Docker (create Dockerfile)
-docker build -t search-agent-backend .
-docker run -p 8000:8000 search-agent-backend
-```
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Submit a pull request
+- [WebSearchTool Integration Guide](WEBSEARCH_INTEGRATION.md)
+- [Testing Guide](TESTING_GUIDE.md)
 
 ## License
 
-MIT License
-
-## Support
-
-For issues or questions, please open an issue on GitHub.
+MIT
