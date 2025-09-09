@@ -108,9 +108,17 @@ search-agent/
 ## Requirements
 
 - Python 3.8+
-- OpenAI API key with access to GPT-4o
+- OpenAI API key with access to GPT-5 models
 - `openai-agents>=0.2.11`
 - `openai>=1.104.1`
+
+## Model Information
+
+This agent uses **GPT-5 mini** - the smallest and most cost-effective GPT-5 model, optimized for:
+- Fast response times
+- Lower costs
+- Efficient web search integration
+- High-quality results for search tasks
 
 ## Testing
 

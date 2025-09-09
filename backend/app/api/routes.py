@@ -9,12 +9,18 @@ from ..config import settings
 router = APIRouter()
 
 # Initialize the OpenAI WebSearchTool agent
-if not settings.openai_api_key:
-    raise ValueError("OpenAI API key is required")
-
-search_agent = OpenAISearchAgent(api_key=settings.openai_api_key)
+search_agent = None
 agent_provider = "openai-websearch"
-agent_model = "gpt-4o"
+agent_model = "gpt-5-mini"
+
+# Initialize agent if API key is available
+if settings.openai_api_key:
+    try:
+        search_agent = OpenAISearchAgent(api_key=settings.openai_api_key)
+    except Exception as e:
+        print(f"Warning: Failed to initialize search agent: {e}")
+else:
+    print("Warning: OPENAI_API_KEY not found in environment variables")
 
 
 class SearchRequest(BaseModel):
@@ -103,6 +109,12 @@ async def search(request: SearchRequest):
     Returns:
         Search results from the agent
     """
+    if not search_agent:
+        raise HTTPException(
+            status_code=503, 
+            detail="Search agent not initialized. Please check OPENAI_API_KEY in .env file"
+        )
+    
     try:
         # Use context_size for OpenAI WebSearch agent
         if agent_provider == "openai-websearch" and hasattr(search_agent, 'search'):

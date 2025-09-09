@@ -49,7 +49,7 @@ class OpenAISearchAgent:
             search_context_size=self.search_config.search_context_size
         )
         
-        # Create the agent with WebSearchTool
+        # Create the agent with WebSearchTool using GPT-5 mini
         self.agent = Agent(
             name="WebSearchAssistant",
             instructions="""You are an advanced search assistant powered by web search capabilities.
@@ -64,7 +64,7 @@ class OpenAISearchAgent:
             
             Your goal is to provide helpful, accurate, and well-sourced information.""",
             tools=[self.web_search_tool],
-            model="gpt-4o"  # Use GPT-4o for best performance with web search
+            model="gpt-5-mini"  # Use GPT-5 mini - smallest GPT-5 model
         )
     
     def update_search_config(
@@ -122,7 +122,7 @@ class OpenAISearchAgent:
                 "query": query,
                 "response": result.final_output,
                 "metadata": {
-                    "model": "gpt-4o",
+                    "model": "gpt-5-mini",
                     "search_context_size": context_size or self.search_config.search_context_size,
                     "tokens_used": getattr(result, 'tokens_used', None),
                     "tool": "WebSearchTool"
@@ -162,7 +162,7 @@ class OpenAISearchAgent:
                     name="ChatAssistant",
                     instructions="""You are a helpful assistant. Provide clear, accurate,
                     and helpful responses based on your knowledge.""",
-                    model="gpt-4o"
+                    model="gpt-5-mini"
                 )
             
             # Build conversation context
@@ -185,7 +185,7 @@ class OpenAISearchAgent:
                 "response": result.final_output,
                 "conversation_id": None,  # Implement session management as needed
                 "metadata": {
-                    "model": "gpt-4o",
+                    "model": "gpt-5-mini",
                     "search_enabled": enable_search,
                     "tokens_used": getattr(result, 'tokens_used', None)
                 }
@@ -238,7 +238,7 @@ class OpenAISearchAgent:
                 "individual_results": results,
                 "synthesis": synthesis_result.final_output,
                 "metadata": {
-                    "model": "gpt-4o",
+                    "model": "gpt-5-mini",
                     "num_queries": len(queries)
                 }
             }
@@ -288,7 +288,7 @@ class OpenAISearchAgent:
                 Agent(
                     name="QueryGenerator",
                     instructions="Generate focused search queries for research.",
-                    model="gpt-4o"
+                    model="gpt-5-mini"
                 ),
                 query_generation_prompt
             )
@@ -331,7 +331,7 @@ class OpenAISearchAgent:
                 "findings": search_results,
                 "report": report_result.final_output,
                 "metadata": {
-                    "model": "gpt-4o",
+                    "model": "gpt-5-mini",
                     "context_size": context_size,
                     "num_queries": len(queries)
                 }

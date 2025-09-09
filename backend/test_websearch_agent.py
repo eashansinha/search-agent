@@ -32,7 +32,7 @@ def test_websearch():
             instructions="""You are a helpful search assistant with real-time web search.
             Provide accurate, current information and cite your sources.""",
             tools=[web_search],
-            model="gpt-4o"
+            model="gpt-5-mini"  # Use GPT-5 mini - smallest GPT-5 model
         )
         print("✅ Agent created")
         

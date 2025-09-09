@@ -60,7 +60,7 @@ async def startup_event():
             instructions="""You are a helpful search assistant with real-time web search capabilities.
             Provide accurate, well-sourced information and always cite your sources.""",
             tools=[web_search],
-            model="gpt-4o"
+            model="gpt-5-mini"  # Use GPT-5 mini - smallest GPT-5 model
         )
         
         print("✅ OpenAI WebSearchTool agent initialized successfully!")
@@ -80,14 +80,14 @@ async def root():
         "version": "1.0.0",
         "status": "running" if agent else "agent not initialized",
         "endpoints": {
-            "health": "/health",
-            "search": "/search",
-            "agent_info": "/agent/info"
+            "health": "/api/health",
+            "search": "/api/search",
+            "agent_info": "/api/agent/info"
         }
     }
 
 
-@app.get("/health")
+@app.get("/api/health")
 async def health():
     """Health check endpoint"""
     return {
@@ -96,7 +96,7 @@ async def health():
     }
 
 
-@app.get("/agent/info")
+@app.get("/api/agent/info")
 async def agent_info():
     """Get agent information"""
     if not agent:
@@ -105,7 +105,7 @@ async def agent_info():
     return {
         "name": "WebSearchAssistant",
         "provider": "openai-websearch",
-        "model": "gpt-4o",
+        "model": "gpt-5-mini",
         "tools": ["WebSearchTool"],
         "capabilities": [
             "Real-time web search",
@@ -115,7 +115,7 @@ async def agent_info():
     }
 
 
-@app.post("/search", response_model=SearchResponse)
+@app.post("/api/search", response_model=SearchResponse)
 async def search(request: SearchRequest):
     """Perform a web search"""
     if not agent:
@@ -143,7 +143,7 @@ async def search(request: SearchRequest):
             query=request.query,
             response=result.final_output,
             metadata={
-                "model": "gpt-4o",
+                "model": "gpt-5-mini",
                 "context_size": request.context_size,
                 "tool": "WebSearchTool"
             }
@@ -157,7 +157,7 @@ async def search(request: SearchRequest):
         )
 
 
-@app.post("/chat")
+@app.post("/api/chat")
 async def chat(message: str):
     """Simple chat endpoint"""
     if not agent:
@@ -186,6 +186,30 @@ async def chat(message: str):
             "message": message,
             "error": str(e)
         }
+
+
+@app.post("/api/search/multi-query")
+async def multi_query_search(queries: list):
+    """Multi-query search endpoint"""
+    if not agent:
+        raise HTTPException(status_code=503, detail="Agent not initialized")
+    
+    return {
+        "success": False,
+        "error": "Multi-query search not implemented in standalone app. Use app.main for full features."
+    }
+
+
+@app.post("/api/research")
+async def research(topic: str, depth: str = "basic"):
+    """Research endpoint"""
+    if not agent:
+        raise HTTPException(status_code=503, detail="Agent not initialized")
+    
+    return {
+        "success": False,
+        "error": "Research feature not implemented in standalone app. Use app.main for full features."
+    }
 
 
 if __name__ == "__main__":
